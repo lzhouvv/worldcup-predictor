@@ -272,10 +272,10 @@ body {
 /* Match Thumbnails — 平铺网格 */
 .match-thumbnails {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
-  padding: 4px 0 16px;
-  margin-bottom: 4px;
+  padding: 4px 0 12px;
+  margin-bottom: 8px;
 }
 .thumb-card {
   background: var(--surface2);
@@ -314,6 +314,21 @@ body {
 .thumb-card.thumb-live { border-color: rgba(46,204,113,.3); }
 .thumb-card.thumb-live .thumb-info { color: var(--green); }
 .thumb-card.thumb-finished { opacity: .6; }
+.summary-thumb {
+  cursor: pointer;
+}
+.summary-thumb.active {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(240,192,64,.1), rgba(255,107,53,.04));
+  box-shadow: 0 0 12px rgba(240,192,64,.1);
+}
+.summary-thumb .thumb-teams {
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: .3px;
+  line-height: 1.4;
+}
 
 /* Score Prediction */
 .score-prediction {
@@ -539,11 +554,133 @@ body {
   align-items: center; gap: 10px; letter-spacing: .3px;
 }
 .section-title span { color: var(--gold); }
+.summary-btn {
+  background: transparent;
+  border: 1px solid #445;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: .85rem;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all .25s ease;
+  letter-spacing: .3px;
+  line-height: 1;
+}
+.summary-btn:hover { border-color: var(--gold); color: var(--gold); }
+.summary-btn.active { background: var(--gold); color: #0c0a20; border-color: var(--gold); }
+.btn-date-nav {
+  background: transparent;
+  border: 1px solid #445;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 1.1rem;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+  transition: all .2s;
+}
+.btn-date-nav:hover { border-color: var(--gold); color: var(--gold); }
+.score-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: .78rem;
+  padding: 2px 4px;
+  width: 26px;
+  text-align: center;
+  font-weight: 700;
+}
+.hit { color: var(--green); font-weight: 700; }
 
+/* Summary card */
+.summary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,.3);
+}
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, var(--surface2), var(--surface3));
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  letter-spacing: .3px;
+}
+.summary-edit-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+  font-size: .75rem;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all .2s;
+  font-weight: 600;
+}
+.summary-edit-btn:hover { border-color: var(--gold); color: var(--gold); }
+.edit-score {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 2px 4px;
+  text-align: center;
+  font-size: .85rem;
+  width: 28px;
+}
+.sum-edit {
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: var(--surface2);
+  border-radius: 6px;
+  font-size: .78rem;
+  color: var(--text-dim);
+}
+.summary-body {
+  padding: 8px 16px;
+}
+.summary-row {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.summary-row:last-child { border-bottom: none; }
+.summary-row .sum-match {
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.summary-row .sum-status {
+  font-size: .78rem;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.summary-row .sum-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  font-size: .78rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.summary-row .sum-info span {
+  white-space: nowrap;
+}
 .standings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   margin-bottom: 44px;
 }
 .group-card {
@@ -552,14 +689,14 @@ body {
   transition: border-color .2s;
 }
 .group-card:hover { border-color: var(--border-light); }
-.group-card.inactive { opacity: .4; border-color: transparent; }
-.group-card.inactive:hover { opacity: .55; border-color: var(--border); }
+.group-card.inactive { opacity: .7; border-color: transparent; }
+.group-card.inactive:hover { opacity: .8; border-color: var(--border); }
 .group-card.inactive .g-name { color: var(--text-muted); }
 .group-card.inactive .standings-item .s-name,
 .group-card.inactive .standings-item .s-pts { color: var(--text-muted); }
 .standings-header {
   display: grid;
-  grid-template-columns: 26px 1fr 28px 36px 32px;
+  grid-template-columns: 1fr 28px 36px 32px;
   gap: 6px;
   padding: 2px 4px 4px;
   font-size: .65rem;
@@ -571,18 +708,16 @@ body {
 }
 .standings-header span { text-align: center; }
 .standings-header span:first-child { text-align: left; }
-.standings-header span:nth-child(2) { text-align: left; }
 .group-card h3 { font-size: .85rem; margin-bottom: 10px; letter-spacing: .3px; }
 .group-card h3 .g-name { color: var(--gold); font-weight: 700; }
 .standings-item {
   display: grid;
-  grid-template-columns: 26px 1fr 28px 36px 32px;
+  grid-template-columns: 1fr 28px 36px 32px;
   gap: 6px; align-items: center;
   padding: 5px 4px; font-size: .78rem;
   border-bottom: 1px solid rgba(255,255,255,.04);
 }
 .standings-item:last-child { border-bottom: none; }
-.standings-item .pos { font-weight: 700; color: var(--text-muted); font-size: .72rem; }
 .standings-item .s-name { font-weight: 600; }
 .standings-item .s-pld, .standings-item .s-pts { text-align: center; }
 .standings-item .s-pld { color: var(--text-muted); font-size: .75rem; }
@@ -791,7 +926,9 @@ body {
       <div class="subtitle">多维量化分析 · 数据驱动 · 智能推荐</div>
     </div>
     <div class="header-controls">
+      <button class="btn-date-nav" onclick="changeDate(-1)" title="前一天">‹</button>
       <input type="date" class="date-picker" id="datePicker">
+      <button class="btn-date-nav" onclick="changeDate(1)" title="后一天">›</button>
       <button class="btn btn-refresh" id="refreshBtn" onclick="refreshPredictions()">🔄 刷新</button>
       <label class="auto-toggle" title="开启后每分钟自动刷新">
         <input type="checkbox" id="autoToggle" onchange="toggleAutoRefresh()">
@@ -806,7 +943,9 @@ body {
 <main class="container">
 
   <!-- Match Cards -->
-  <div class="section-title" style="margin-bottom:8px">⚽ 今日比赛 <span>Matches</span></div>
+  <div class="section-title" style="margin-bottom:8px">
+    <span>⚽ 今日比赛 <span>Matches</span></span>
+  </div>
   <div class="match-thumbnails" id="matchThumbnails"></div>
   <div id="matchContainer">
     <div class="empty-state">
@@ -817,8 +956,7 @@ body {
   </div>
 
   <!-- Standings -->
-  <div class="section-title">📊 小组积分榜 <span>Standings</span></div>
-  <div class="standings-grid" id="standingsGrid"></div>
+  <div id="standingsGrid"></div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -1246,6 +1384,17 @@ async function simulateLiveScores(dateStr) {
       if (md.hhs !== undefined) { lm.htHomeScore = md.hhs; lm.htAwayScore = md.has || 0; lm.htValid = true; lm.htSaved = true; }
       if (md.hs !== undefined || md.hhs !== undefined) { lm.finished = true; lm.minute = 90; }
     }
+    // 加载用户手动修改的比分 (localStorage)
+    try {
+      const custom = JSON.parse(localStorage.getItem("wc_customScores") || "{}");
+      for (const [key, s] of Object.entries(custom)) {
+        const lm = LIVE_MATCHES[key];
+        if (!lm) continue;
+        lm.homeScore = s.hs; lm.awayScore = s.as;
+        lm.htHomeScore = s.hhs || 0; lm.htAwayScore = s.has || 0;
+        lm.finished = true; lm.isLiveData = true; lm.htValid = true; lm.htSaved = true;
+      }
+    } catch(e) {}
   } catch(e) {
     console.warn("simulateLiveScores 失败:", e);
   }
@@ -2253,6 +2402,22 @@ function toggleReasoning(idx) {
 // ================================================================
 
 /** 实时刷新：获取真实数据 + 重算所有预测 */
+function changeDate(delta) {
+  const picker = document.getElementById("datePicker");
+  const dates = Object.keys(SCHEDULE).sort();
+  let idx = dates.indexOf(picker.value);
+  if (idx < 0) idx = 0;
+  idx = Math.max(0, Math.min(dates.length - 1, idx + delta));
+  picker.value = dates[idx];
+  localStorage.setItem("wc_lastDate", picker.value);
+  LIVE_MATCHES = {};
+  (async () => {
+    await simulateLiveScores(picker.value);
+    loadMatches();
+    startAutoRefresh();
+  })();
+}
+
 async function refreshPredictions() {
   const btn = document.getElementById("refreshBtn");
   btn.classList.add("spinning");
@@ -2306,27 +2471,175 @@ let selectedMatchIdx = -1;
 function renderThumbnails(matches) {
   const container = document.getElementById("matchThumbnails");
   if (!matches || matches.length === 0) { container.innerHTML = ""; return; }
-  container.innerHTML = matches.map((m, i) => {
+  let html = matches.map((m, i) => {
     const ls = getLiveStatus(m.h, m.a);
     const hasKicked = ls ? (ls.hasKickedOff || hasMatchKickedOff(m.h+"-"+m.a, document.getElementById("datePicker").value)) : false;
-    const isActive = i === selectedMatchIdx;
+    const isActive = !showSummary && i === selectedMatchIdx;
     let info = "📅", score = "";
     if (ls && ls.finished && ls.isLiveData && hasKicked) { info = "✅ 终场"; score = `${ls.homeScore}-${ls.awayScore}`; }
     else if (ls && hasKicked) { info = "🟢 进行中"; score = `${ls.homeScore}-${ls.awayScore}`; }
     else if (isWithinTwoHours(m.h+"-"+m.a, document.getElementById("datePicker").value)) { info = "⏳ 即将"; }
     const cls = `thumb-card${isActive?' active':''}${ls?.finished?' thumb-finished':''}${hasKicked&&!ls?.finished?' thumb-live':''}`;
     return `<div class="${cls}" onclick="selectMatch(${i})">
-      <div class="thumb-teams">${TEAMS[m.h]?.flag||''} vs ${TEAMS[m.a]?.flag||''}</div>
+      <div class="thumb-teams">${TEAMS[m.h]?.flag||''} ${m.h} vs ${TEAMS[m.a]?.flag||''} ${m.a}</div>
       ${score ? `<div class="thumb-score">${score}</div>` : ''}
       <div class="thumb-info">${info || ''}</div>
     </div>`;
   }).join('');
+  // 汇总按钮作为第5列
+  html += `<div class="thumb-card summary-thumb ${showSummary ? 'active' : ''}" id="summaryBtn" onclick="toggleSummary()">
+    <div class="thumb-teams" style="font-size:.8rem;line-height:1.4">📋<br>汇总</div>
+    <div class="thumb-info" style="margin-top:4px">查看全部</div>
+  </div>`;
+  container.innerHTML = html;
 }
 
 function selectMatch(idx) {
   selectedMatchIdx = idx;
   renderThumbnails(SCHEDULE[document.getElementById("datePicker").value]);
   renderSelectedMatch();
+}
+
+let showSummary = false;
+let editingScores = false;
+let summaryEditMode = false;
+
+function editScores() {
+  editingScores = !editingScores;
+  renderSummary();
+}
+
+function toggleSummary() {
+  showSummary = !showSummary;
+  if (showSummary) {
+    selectedMatchIdx = -1;
+    renderSummary();
+  } else {
+    renderSelectedMatch();
+  }
+  const dateStr = document.getElementById("datePicker").value;
+  renderThumbnails(SCHEDULE[dateStr]);
+}
+
+function saveEdit(idx) {
+  const dateStr = document.getElementById("datePicker").value;
+  const matches = SCHEDULE[dateStr];
+  if (!matches || idx >= matches.length) return;
+  const m = matches[idx];
+  const key = m.h + "-" + m.a;
+  const ftH = parseInt(document.getElementById("edit-ft-" + idx).value) || 0;
+  const ftA = parseInt(document.getElementById("edit-ft2-" + idx).value) || 0;
+  const htH = parseInt(document.getElementById("edit-ht-" + idx).value) || 0;
+  const htA = parseInt(document.getElementById("edit-ht2-" + idx).value) || 0;
+  // 保存到 LIVE_MATCHES
+  if (LIVE_MATCHES[key]) {
+    LIVE_MATCHES[key].homeScore = ftH;
+    LIVE_MATCHES[key].awayScore = ftA;
+    LIVE_MATCHES[key].htHomeScore = htH;
+    LIVE_MATCHES[key].htAwayScore = htA;
+    LIVE_MATCHES[key].finished = true;
+    LIVE_MATCHES[key].isLiveData = true;
+    LIVE_MATCHES[key].htValid = true;
+    LIVE_MATCHES[key].htSaved = true;
+  }
+  // 持久化到 localStorage
+  let custom = {};
+  try { custom = JSON.parse(localStorage.getItem("wc_customScores") || "{}"); } catch(e) {}
+  custom[key] = { hs: ftH, as: ftA, hhs: htH, has: htA };
+  localStorage.setItem("wc_customScores", JSON.stringify(custom));
+  renderSummary();
+}
+
+function renderSummary() {
+  const dateStr = document.getElementById("datePicker").value;
+  const matches = SCHEDULE[dateStr];
+  const container = document.getElementById("matchContainer");
+  if (!matches || matches.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">📅</div><h3>该日期没有比赛</h3></div>';
+    return;
+  }
+  let html = `<div class="summary-card">
+    <div class="summary-header" style="display:flex;justify-content:space-between;align-items:center">
+      <span>📋 今日赛果汇总 · ${dateStr}</span>
+      <button class="summary-btn" onclick="editScores()" style="font-size:.7rem;padding:4px 10px">${editingScores ? '✅ 完成' : '✏️ 修改比分'}</button>
+    </div>
+    <div class="summary-body">`;
+  matches.forEach((m, i) => {
+    const result = analyzeMatch(m.h, m.a, m.odds);
+    if (!result) return;
+    const ls = getLiveStatus(m.h, m.a);
+    const status = ls && ls.finished && ls.isLiveData
+      ? `终场·${ls.homeScore}-${ls.awayScore}`
+      : ls && ls.hasKickedOff ? `🟢 ${ls.homeScore}-${ls.awayScore}`
+      : "📅";
+    const htScore = ls && ls.htValid ? `<span style="margin-left:24px">半场 ${ls.htHomeScore}-${ls.htAwayScore}</span>` : "";
+    const actualLabel = ls && ls.finished && ls.isLiveData ? `${ls.homeScore}-${ls.awayScore}` : "";
+    // 比分预测 top-3, 命中绿色标记
+    const scoreLabels = result.scorePrediction.slice(0, 3).map(s => {
+      const hit = actualLabel && s.label === actualLabel;
+      return hit ? `<span class="hit">${s.label}</span>` : s.label;
+    }).join("、");
+    // 半全场 top-1 + 命中检测
+    const actualHTFT = ls && ls.finished && ls.htValid
+      ? (ls.htHomeScore > ls.htAwayScore ? "胜" : ls.htHomeScore < ls.htAwayScore ? "负" : "平") + "-"
+        + (ls.homeScore > ls.awayScore ? "胜" : ls.homeScore < ls.awayScore ? "负" : "平")
+      : "";
+    const htftAll = result.htftPredictions ? result.htftPredictions.slice(0, 3) : [];
+    const htft = htftAll.map(h => {
+      const hit = actualHTFT && h.label === actualHTFT;
+      return hit ? `<span class="hit">${h.label}</span>` : h.label;
+    }).join("、") || "-";
+    // 总进球: 各预测比分之和 (与比分预测一一对应)
+    // 总进球命中检测
+    const actualTotal = ls && ls.finished && ls.isLiveData ? (ls.homeScore + ls.awayScore) : -1;
+    const goalLabels = result.scorePrediction.slice(0, 3).map(s => {
+      if (s.isOther) return "";
+      const sum = (parseInt(s.home) || 0) + (parseInt(s.away) || 0);
+      return sum + "球";
+    }).filter(Boolean);
+    const uniqueGoals = [...new Set(goalLabels)].map(g => {
+      const gNum = parseInt(g);
+      return actualTotal >= 0 && gNum === actualTotal ? `<span class="hit">${g}</span>` : g;
+    });
+    const totalGoals = uniqueGoals.length > 0 ? uniqueGoals.join("、") : "-";
+    const ouRef = result.overUnder ? result.overUnder.type.replace("⚽ ","") : "";
+    // 胜平负方向命中检测
+    const actualDir = ls && ls.finished && ls.isLiveData
+      ? (ls.homeScore > ls.awayScore ? "home" : ls.homeScore < ls.awayScore ? "away" : "draw") : "";
+    const predDir = result.probs.home >= result.probs.draw && result.probs.home >= result.probs.away ? "home"
+      : result.probs.draw >= result.probs.home && result.probs.draw >= result.probs.away ? "draw" : "away";
+    const wdl = actualDir === "home"
+      ? `<span style="color:var(--green)">${result.home.name} ${result.probs.home}%</span> / 平 ${result.probs.draw}% / ${result.away.name} ${result.probs.away}%`
+      : actualDir === "away"
+        ? `${result.home.name} ${result.probs.home}% / 平 ${result.probs.draw}% / <span style="color:var(--green)">${result.away.name} ${result.probs.away}%</span>`
+        : actualDir === "draw"
+          ? `${result.home.name} ${result.probs.home}% / <span style="color:var(--green)">平 ${result.probs.draw}%</span> / ${result.away.name} ${result.probs.away}%`
+          : `${result.home.name} ${result.probs.home}% / 平 ${result.probs.draw}% / ${result.away.name} ${result.probs.away}%`;
+    // 编辑模式
+    if (editingScores) {
+      html += `<div class="summary-row">
+        <div class="sum-match" style="margin-bottom:4px">${result.home.flag} ${result.home.name} vs ${result.away.flag} ${result.away.name}</div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:.78rem;color:var(--text-dim)">
+          终场: <input class="score-input" id="edit-ft-${i}" value="${ls?.homeScore??0}" size="1"> - <input class="score-input" id="edit-ft2-${i}" value="${ls?.awayScore??0}" size="1">
+          半场: <input class="score-input" id="edit-ht-${i}" value="${ls?.htHomeScore??0}" size="1"> - <input class="score-input" id="edit-ht2-${i}" value="${ls?.htAwayScore??0}" size="1">
+          <button class="summary-btn" style="font-size:.65rem;padding:2px 8px" onclick="saveEdit(${i})">保存</button>
+        </div>
+      </div>`;
+      return;
+    }
+    html += `<div class="summary-row">
+      <div class="sum-match">${result.home.flag} ${result.home.name} vs ${result.away.flag} ${result.away.name}</div>
+      <div class="sum-status">状态: ${status} ${htScore}</div>
+      <div class="sum-info">
+        <span>🏆 胜平负: ${wdl}</span>
+        <span>🥅 比分: ${scoreLabels}</span>
+        <span>🔄 半全场: ${htft}</span>
+        <span>⚽ 总进球: ${totalGoals}${ouRef ? ' ('+ouRef+')' : ''}</span>
+      </div>
+    </div>`;
+  });
+  html += `</div></div>`;
+  container.innerHTML = html;
 }
 
 function renderSelectedMatch() {
@@ -2393,18 +2706,13 @@ function renderStandings() {
   const todayMatches = SCHEDULE[dateStr] || [];
   const activeGroups = new Set(todayMatches.map(m => m.g + "组"));
 
-  // 从所有已知结果计算积分
   const allMatches = [...FIRST_ROUND_RESULTS];
-  // 也加入 MATCH_DETAILS 中有的非首轮比赛
   for (const [key, md] of Object.entries(MATCH_DETAILS)) {
     if (md.hs === undefined) continue;
     const [h, a] = key.split("-");
-    if (!allMatches.some(m => m.h === h && m.a === a)) {
-      allMatches.push({ h, a, hs: md.hs, as: md.as || 0 });
-    }
+    if (!allMatches.some(m => m.h === h && m.a === a)) allMatches.push({ h, a, hs: md.hs, as: md.as || 0 });
   }
 
-  // 为每支球队计算积分
   const teamStats = {};
   for (const m of allMatches) {
     for (const side of ["h","a"]) {
@@ -2414,41 +2722,48 @@ function renderStandings() {
     const hGoals = m.hs, aGoals = m.as;
     teamStats[m.h].gp++; teamStats[m.h].gf += hGoals; teamStats[m.h].ga += aGoals; teamStats[m.h].gd += hGoals - aGoals;
     teamStats[m.a].gp++; teamStats[m.a].gf += aGoals; teamStats[m.a].ga += hGoals; teamStats[m.a].gd += aGoals - hGoals;
-    if (hGoals > aGoals) { teamStats[m.h].pts += 3; }
+    if (hGoals > aGoals) teamStats[m.h].pts += 3;
     else if (hGoals === aGoals) { teamStats[m.h].pts += 1; teamStats[m.a].pts += 1; }
-    else { teamStats[m.a].pts += 3; }
+    else teamStats[m.a].pts += 3;
   }
 
-  let html = "";
-  for (const [gName, info] of Object.entries(GROUPS)) {
-    const isActive = activeGroups.has(gName);
-    // 按积分排序球队
+  function buildGroup(gName, info, active) {
     const sorted = [...info.teams].sort((a, b) => {
       const sa = teamStats[a], sb = teamStats[b];
-      if (!sa && !sb) return 0;
-      if (!sa) return 1; if (!sb) return -1;
+      if (!sa && !sb) return 0; if (!sa) return 1; if (!sb) return -1;
       if (sb.pts !== sa.pts) return sb.pts - sa.pts;
       if (sb.gd !== sa.gd) return sb.gd - sa.gd;
       return sb.gf - sa.gf;
     });
-    // 出线判定: 前2名出线; 若第2名与第3名同分则同为出线
     const cutoffPts = sorted.length >= 2 ? (teamStats[sorted[1]]?.pts ?? -1) : -1;
-    html += `<div class="group-card ${isActive ? '' : 'inactive'}"><h3><span class="g-name">${gName}</span></h3>
-      <div class="standings-header"><span></span><span>球队</span><span>场</span><span>净</span><span>分</span></div>`;
+    let h = `<div class="group-card ${active ? '' : 'inactive'}"><h3><span class="g-name">${gName}</span></h3>
+      <div class="standings-header"><span>球队</span><span>场</span><span>净</span><span>分</span></div>`;
     sorted.forEach((t, i) => {
       const s = teamStats[t] || { pts: 0, gp: 0, gf: 0, ga: 0, gd: 0 };
       const qualified = i < 2 || s.pts === cutoffPts;
-      const flag = TEAMS[t]?.flag || '';
-      html += `<div class="standings-item ${qualified ? 'qualified' : ''}">
-        <span class="pos">${i+1}</span>
-        <span class="s-name">${flag} ${t}</span>
+      h += `<div class="standings-item ${qualified ? 'qualified' : ''}">
+        <span class="s-name">${TEAMS[t]?.flag||''} ${t}</span>
         <span class="s-pld">${s.gp}</span>
         <span class="s-pld" style="color:var(--text-dim)">${s.gd>0?'+':''}${s.gd}</span>
         <span class="s-pts">${s.pts}</span>
       </div>`;
     });
-    html += `</div>`;
+    return h + `</div>`;
   }
+
+  let html = `<div class="section-title" style="margin:20px 0 12px;font-size:.9rem">📊 小组积分榜 — 今日比赛小组</div>
+  <div class="standings-grid">`;
+  for (const [gName, info] of Object.entries(GROUPS)) {
+    if (activeGroups.has(gName)) html += buildGroup(gName, info, true);
+  }
+  html += `</div>`;
+  // 无比赛的小组
+  html += `<div class="section-title" style="margin:20px 0 12px;font-size:.82rem;color:var(--text-muted)">其他小组</div>
+  <div class="standings-grid">`;
+  for (const [gName, info] of Object.entries(GROUPS)) {
+    if (!activeGroups.has(gName)) html += buildGroup(gName, info, false);
+  }
+  html += `</div>`;
   grid.innerHTML = html;
 }
 
