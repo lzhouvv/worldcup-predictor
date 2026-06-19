@@ -2142,6 +2142,53 @@ function predictHalfTime(finalHomeExp, finalAwayExp, histSupportVal) {
   return combos.slice(0, 3);
 }
 
+/** 计算各队本届世界杯数据 (积分、排名、出线、潜在对手) */
+function getWCStats() {
+  const allMatches = [...FIRST_ROUND_RESULTS];
+  for (const [key, md] of Object.entries(MATCH_DETAILS)) {
+    if (md.hs === undefined) continue;
+    const [h, a] = key.split("-");
+    if (!allMatches.some(m => m.h === h && m.a === a)) allMatches.push({ h, a, hs: md.hs, as: md.as || 0 });
+  }
+  const stats = {};
+  for (const m of allMatches) {
+    for (const side of ["h","a"]) {
+      const n = side === "h" ? m.h : m.a;
+      if (!stats[n]) stats[n] = { pts: 0, gp: 0, gf: 0, ga: 0, gd: 0 };
+    }
+    const hg = m.hs, ag = m.as;
+    stats[m.h].gp++; stats[m.h].gf += hg; stats[m.h].ga += ag; stats[m.h].gd += hg - ag;
+    stats[m.a].gp++; stats[m.a].gf += ag; stats[m.a].ga += hg; stats[m.a].gd += ag - hg;
+    if (hg > ag) stats[m.h].pts += 3; else if (hg === ag) { stats[m.h].pts += 1; stats[m.a].pts += 1; }
+    else stats[m.a].pts += 3;
+  }
+  const groupResults = {};
+  for (const [g, info] of Object.entries(GROUPS)) {
+    const sorted = [...info.teams].sort((a,b) => {
+      const sa = stats[a], sb = stats[b];
+      if (!sa && !sb) return 0; if (!sa) return 1; if (!sb) return -1;
+      if (sb.pts !== sa.pts) return sb.pts - sa.pts;
+      if (sb.gd !== sa.gd) return sb.gd - sa.gd;
+      return sb.gf - sa.gf;
+    });
+    const cutoffPts = sorted.length >= 2 ? (stats[sorted[1]]?.pts ?? -1) : -1;
+    sorted.forEach((t, i) => {
+      const q = i < 2 || (stats[t]?.pts === cutoffPts && cutoffPts >= 0);
+      if (stats[t]) { stats[t].pos = i + 1; stats[t].qlf = q; stats[t].grp = g; }
+    });
+    groupResults[g] = sorted;
+  }
+  const groupNames = Object.keys(GROUPS);
+  for (let i = 0; i < groupNames.length; i += 2) {
+    if (i + 1 >= groupNames.length) break;
+    const g1 = groupNames[i], g2 = groupNames[i+1];
+    const r1 = groupResults[g1]||[], r2 = groupResults[g2]||[];
+    if (r1.length && r2.length > 1 && stats[r1[0]]) stats[r1[0]].rival = r2[1];
+    if (r2.length && r1.length > 1 && stats[r2[0]]) stats[r2[0]].rival = r1[1];
+  }
+  return stats;
+}
+
 function generateReasoning(result) {
   const { home, away, dims, composite, probs, overUnder, ctx } = result;
   const lines = [];
@@ -2189,6 +2236,27 @@ function generateReasoning(result) {
     const moreTravel = ctx.aTravelKm > ctx.hTravelKm ? away.name : home.name;
     lines.push(`✈️ ${moreTravel} 飞行距离更远，体能储备或受影响`);
   }
+
+  // 4b. 本届世界杯表现
+  try {
+    const wc = getWCStats();
+    for (const [name, tag] of [[home.name,home.tag||""],[away.name,away.tag||""]]) {
+      const s = wc[name];
+      if (!s || s.gp === 0) continue;
+      const flag = TEAMS[name]?.flag||"";
+      lines.push(`🏟 ${flag}${name} 本届${s.grp} ${s.gp}场 ${s.pts}分（${s.gf}进球/${s.ga}失球）排名第${s.pos}`);
+      if (s.qlf) {
+        const rivalName = s.rival;
+        if (rivalName && TEAMS[rivalName]) {
+          lines.push(`✅ ${flag}${name} 已出线，潜在对手: ${TEAMS[rivalName]?.flag||''}${rivalName}`);
+        } else {
+          lines.push(`✅ ${flag}${name} 已出线`);
+        }
+      } else if (s.gp >= 2) {
+        lines.push(`⚠️ ${flag}${name} 出线形势严峻`);
+      }
+    }
+  } catch(e) {}
 
   // 5. Injury
   if (ctx.hInjury && !ctx.aInjury) {
