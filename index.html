@@ -2357,7 +2357,12 @@ function renderMatchCard(match, idx) {
         if (ls.isHalftime) return `<span class="live-badge halftime"><span class="live-dot"></span> 中场休息 · ${ls.homeScore}-${ls.awayScore}</span>`;
         const clockDisplay = ls.clock || (ls.minute + "'");
         const stoppageTag = ls.stoppage ? `<span class="stoppage">+补时</span>` : "";
-        return `<span class="live-badge live-green"><span class="live-dot-green"></span> ${clockDisplay} ${stoppageTag}</span>`;
+        const htSuffix = ls.htValid
+          ? `<span style="color:var(--text-muted);font-size:.65rem"> 半场 ${ls.htHomeScore}-${ls.htAwayScore}</span>`
+          : (ls.hasKickedOff && !ls.finished && ls.minute >= 45)
+            ? `<span style="color:var(--text-muted);font-size:.65rem"> 半场 ${ls.homeScore}-${ls.awayScore}</span>`  // 用当前比分
+            : "";
+        return `<span class="live-badge live-green"><span class="live-dot-green"></span> ${clockDisplay} ${stoppageTag}${htSuffix}</span>`;
       })()}
     </div>
     <div class="match-body">
