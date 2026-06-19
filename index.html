@@ -1519,7 +1519,11 @@ function startAutoRefresh() {
   }
   const hasLive = hasLiveMatches();
   document.getElementById("autoToggle").checked = hasLive;
-  if (!hasLive) return;
+  if (!hasLive) {
+    console.log("⏹️ 无进行中比赛, 自动刷新未启动");
+    return;
+  }
+  console.log("▶️ 自动刷新已启动, 间隔60秒");
 
   // 中场休息时暂停15分钟
   if (allAtHalftime()) {
@@ -1532,8 +1536,15 @@ function startAutoRefresh() {
   }
 
   AUTO_REFRESH_INTERVAL = setInterval(async () => {
+    console.log("🔄 自动刷新执行");
     LIVE_MATCHES = {};
     await simulateLiveScores();
+    // 重新检查开球状态
+    const ds = document.getElementById("datePicker").value;
+    for (const key in LIVE_MATCHES) {
+      const m = LIVE_MATCHES[key];
+      m.hasKickedOff = hasMatchKickedOff(key, ds);
+    }
     advanceLiveScores();
     loadMatches();
     // 检查是否全场结束
