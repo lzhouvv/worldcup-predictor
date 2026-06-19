@@ -2396,6 +2396,11 @@ function renderMatchCard(match, idx) {
   <div class="prediction-panel-wrap">
     <div class="pp-header">
       <span>📊 赛果分析</span>
+      ${(() => {
+        const ls = getLiveStatus(homeName, awayName);
+        if (!ls || !ls.finished) return '';
+        return `<button class="summary-btn" onclick="editMatchScore('${homeName}','${awayName}',${idx})" style="font-size:.65rem;padding:2px 8px">✏️ 比分</button>`;
+      })()}
     </div>
     <div class="match-details" id="match-details-${idx}">
       <div class="match-body-ext">
@@ -2591,6 +2596,31 @@ let summaryEditMode = false;
 function editScores() {
   editingScores = !editingScores;
   renderSummary();
+}
+
+/** 直接修改单场比赛比分 (弹窗输入) */
+function editMatchScore(home, away, idx) {
+  const key = home + "-" + away;
+  const lm = LIVE_MATCHES[key];
+  if (!lm) return;
+  const ftH = prompt("终场主队进球:", lm.homeScore) || "";
+  const ftA = prompt("终场客队进球:", lm.awayScore) || "";
+  const htH = prompt("半场主队进球:", lm.htHomeScore??0) || "";
+  const htA = prompt("半场客队进球:", lm.htAwayScore??0) || "";
+  const h = parseInt(ftH), a = parseInt(ftA);
+  const hh = parseInt(htH), ha = parseInt(htA);
+  if (isNaN(h) || isNaN(a)) { alert("请输入有效数字"); return; }
+  // 更新 LIVE_MATCHES
+  lm.homeScore = h; lm.awayScore = a;
+  lm.htHomeScore = isNaN(hh) ? 0 : hh; lm.htAwayScore = isNaN(ha) ? 0 : ha;
+  lm.finished = true; lm.isLiveData = true; lm.htValid = true; lm.htSaved = true;
+  // 持久化
+  let custom = {};
+  try { custom = JSON.parse(localStorage.getItem("wc_customScores") || "{}"); } catch(e) {}
+  custom[key] = { hs: h, as: a, hhs: isNaN(hh)?0:hh, has: isNaN(ha)?0:ha };
+  localStorage.setItem("wc_customScores", JSON.stringify(custom));
+  // 刷新
+  loadMatches();
 }
 
 function toggleSummary() {
