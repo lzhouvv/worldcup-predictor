@@ -935,6 +935,9 @@ body {
         <span class="toggle-slider"></span>
         <span class="toggle-label">自动</span>
       </label>
+      <button class="btn btn-outline" onclick="exportCSV()" title="导出比分数据">⬆</button>
+      <button class="btn btn-outline" onclick="document.getElementById('csvInput').click()" title="导入比分数据">⬇</button>
+      <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="importCSV(event)">
       <button class="btn btn-outline" onclick="openModal()">📖</button>
     </div>
   </div>
@@ -2886,6 +2889,54 @@ function renderStandings() {
 // ================================================================
 function openModal() { document.getElementById("methodologyModal").classList.add("open"); }
 function closeModal() { document.getElementById("methodologyModal").classList.remove("open"); }
+
+/** 导出比分数据为 CSV */
+function exportCSV() {
+  try {
+    const custom = JSON.parse(localStorage.getItem("wc_customScores") || "{}");
+    let csv = "比赛,主队进球,客队进球,半场主队,半场客队\n";
+    for (const [key, s] of Object.entries(custom)) {
+      csv += `${key},${s.hs},${s.as},${s.hhs||0},${s.has||0}\n`;
+    }
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "worldcup_scores.csv";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch(e) { alert("导出失败: "+e.message); }
+}
+
+/** 从 CSV 导入比分数据 */
+function importCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const text = e.target.result;
+      const lines = text.split("\n").filter(l => l.trim());
+      const custom = {};
+      for (let i = 1; i < lines.length; i++) {
+        const parts = lines[i].split(",");
+        if (parts.length < 5) continue;
+        const [key, hs, as, hhs, has] = parts.map(s => s.trim());
+        custom[key] = { hs: parseInt(hs)||0, as: parseInt(as)||0, hhs: parseInt(hhs)||0, has: parseInt(has)||0 };
+      }
+      localStorage.setItem("wc_customScores", JSON.stringify(custom));
+      // 应用到当前 LIVE_MATCHES
+      for (const [key, s] of Object.entries(custom)) {
+        const lm = LIVE_MATCHES[key];
+        if (lm) { lm.homeScore = s.hs; lm.awayScore = s.as; lm.htHomeScore = s.hhs||0; lm.htAwayScore = s.has||0;
+          lm.finished = true; lm.isLiveData = true; lm.htValid = true; lm.htSaved = true; }
+      }
+      alert(`✅ 导入成功，共 ${Object.keys(custom).length} 场比赛`);
+      loadMatches();
+    } catch(err) { alert("导入失败: "+err.message); }
+  };
+  reader.readAsText(file);
+  event.target.value = "";
+}
 document.getElementById("methodologyModal").addEventListener("click", function(e) {
   if (e.target === this) closeModal();
 });
