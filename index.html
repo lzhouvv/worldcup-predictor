@@ -1907,11 +1907,11 @@ function predictScore(result) {
 
   // 计算常见比分概率 (0~5球)
   const scorePool = [];
-  const maxGoals = 5;
+  const maxGoals = 8;
   for (let hg = 0; hg <= maxGoals; hg++) {
     for (let ag = 0; ag <= maxGoals; ag++) {
       // 排除极不现实的大比分
-      if (hg + ag > 6) continue;
+      if (hg + ag > 10) continue;
       const prob = poissonProb(finalHomeExp, hg) * poissonProb(finalAwayExp, ag);
       if (prob > 0.001) { // >0.1% 才纳入
         scorePool.push({ home: hg, away: ag, label: `${hg}-${ag}`, prob });
@@ -2105,9 +2105,9 @@ function predictHalfTime(finalHomeExp, finalAwayExp, histSupportVal) {
 
   // FT 方向概率 (从 predictScore 的 poissonProbs 获取，此处用传入的 finalExp 重算)
   let ftHome = 0, ftDraw = 0, ftAway = 0;
-  for (let hg = 0; hg <= 5; hg++) {
-    for (let ag = 0; ag <= 5; ag++) {
-      if (hg + ag > 6) continue;
+  for (let hg = 0; hg <= 6; hg++) {
+    for (let ag = 0; ag <= 6; ag++) {
+      if (hg + ag > 8) continue;
       const prob = poissonProb(finalHomeExp, hg) * poissonProb(finalAwayExp, ag);
       if (prob > 0.001) {
         if (hg > ag) ftHome += prob;
